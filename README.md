@@ -10,6 +10,14 @@ An AI skill that turns your OpenClaw setup from "it works, I think" into a tuned
 
 ---
 
+## Overview Demo
+
+<a href="https://youtu.be/y9oJmVcY94M?si=NEk9b2mM-b2VwiHV" target="_blank">
+  <img src="https://img.youtube.com/vi/y9oJmVcY94M/maxresdefault.jpg" alt="OpenClaw Optimizer Overview Demo" width="800" />
+</a>
+
+---
+
 ## Why This Exists
 
 Most OpenClaw users are running with default model routing (expensive), bloated bootstrap files (burning tokens every turn), cron jobs piling up on the same minute (thundering herd), and no idea that a stuck delivery queue is silently saturating their gateway's event loop.
