@@ -1023,9 +1023,13 @@ This skill maintains **system profiles** — persistent knowledge files that cap
 
 ### How It Works
 
-**Directory:** `~/.openclaw-optimizer/systems/` — one Markdown file per deployment, plus `TEMPLATE.md` for new deployments. This is a **centralized location outside the skill directory** so that: (1) system profiles are never accidentally pushed to git, (2) multiple AI tools (Claude Code, OpenClaw, Gemini CLI, etc.) on the same machine can read/write the same profiles without drift. Cross-machine sync is still manual via SCP.
+**Directory:** `~/.openclaw-optimizer/systems/` — one profile per deployment, plus `TEMPLATE.md` for new deployments. This is a **centralized location outside the skill directory** so that: (1) system profiles are never accidentally pushed to git, (2) multiple AI tools (Claude Code, OpenClaw, Gemini CLI, etc.) on the same machine can read/write the same profiles without drift. Cross-machine sync is still manual via SCP.
 
-**Deployment ID:** Each deployment has a unique slug (e.g., `my-home-lab`, `prod-cluster-east`, `dev-standalone`). The file is named `systems/<deployment-id>.md`.
+**Deployment ID:** Each deployment has a unique slug (e.g., `jbd-home`, `prod-cluster-east`, `dev-standalone`).
+
+**Profile formats (two supported):**
+- **Directory format (preferred):** `~/.openclaw-optimizer/systems/<deployment-id>/` — directory containing `INDEX.md` (always-loaded summary, ~1-4K tokens) plus topic files loaded on-demand. Dramatically reduces session-start context cost.
+- **Single-file format (legacy):** `~/.openclaw-optimizer/systems/<deployment-id>.md` — monolith file containing everything. Still supported for backwards compatibility.
 
 **Topology types:**
 | Type | Description |
@@ -1044,9 +1048,10 @@ This skill maintains **system profiles** — persistent knowledge files that cap
 
 **At session start (identify the deployment):**
 1. Ask which deployment the user is working on, or identify it from context (SSH target, hostnames, IPs)
-2. Check `~/.openclaw-optimizer/systems/` for an existing profile matching the deployment
-3. If found: **read the profile** — load topology, access details, past issues, and lessons learned. Use this knowledge throughout the session.
-4. If not found: create a new profile from `~/.openclaw-optimizer/systems/TEMPLATE.md` during the session
+2. Check if `~/.openclaw-optimizer/systems/<deployment-id>/` **directory** exists
+3. If directory found: read `INDEX.md` only (~1-4K tokens). Use the **File Manifest** table at the bottom to load topic files on-demand during the session — do NOT read all files upfront.
+4. If directory NOT found but `<deployment-id>.md` **file** exists: read the monolith (legacy mode). Consider migrating to directory format.
+5. If neither found: create a new profile from `~/.openclaw-optimizer/systems/TEMPLATE.md` during the session
 
 **On any system assessment or audit (mandatory — run before making recommendations):**
 1. `openclaw cron list` — capture full cron inventory: job IDs, names, schedules, status, last run times
@@ -1059,33 +1064,52 @@ This skill maintains **system profiles** — persistent knowledge files that cap
 8. Document ALL findings in the system profile before making recommendations
 9. **Without this data, recommendations will duplicate existing automation and miss hidden drains.**
 
-**During the session:**
-- Reference the profile for SSH access, paths, IPs, and known gotchas
-- Check the issue log before diagnosing — the same problem may have been solved before
+**During the session (on-demand file loading):**
+- Reference INDEX.md for SSH access, IPs, routing, and cron status
+- **When diagnosing any issue:** read `lessons.md` FIRST (check if it's already solved), then the relevant topic file
+- **When troubleshooting cron:** read `cron.md` for full job IDs, schedules, and observations
+- **When investigating providers/connectivity:** read `providers.md` and/or `topology.md`
+- **When checking channels/Telegram:** read `channels.md` for group API IDs and mapping
+- **When reviewing history:** read `issues/YYYY-MM.md` for the relevant month
 - Apply lessons learned to avoid repeating mistakes
 
 **At session end (update the profile):**
+
+*For directory-based profiles:*
+1. Update the specific **topic file(s)** that changed (e.g., `routing.md` if fallbacks were reordered)
+2. Update `INDEX.md` only if **summary-level data changed** (new provider added/removed, routing swap, cron status change, machine added/removed)
+3. Add new issues to `issues/YYYY-MM.md` (current month file, newest first) with: symptom, root cause, fix, rollback, lesson
+4. Add new lessons to `lessons.md` (permanent, never archived)
+5. Update the `Last updated` date in INDEX.md
+6. Sync **only changed files** to the gateway: `scp ~/.openclaw-optimizer/systems/<deployment-id>/<changed-file> <user>@<host>:~/.openclaw-optimizer/systems/<deployment-id>/`
+7. Note: system profiles live in `~/.openclaw-optimizer/systems/`, NOT in the skill directory. Do not commit them to git.
+
+*For legacy single-file profiles:*
 1. Add any new issues to the **Issue Log** (newest first) with: symptom, root cause, fix, rollback, lesson
 2. Update **Lessons Learned** with new patterns discovered
 3. Update machine details if anything changed (IPs, versions, config)
 4. Update the `Last updated` date
 5. Sync the profile to the gateway: `scp ~/.openclaw-optimizer/systems/<deployment-id>.md <user>@<host>:~/.openclaw-optimizer/systems/`
-6. Note: system profiles live in `~/.openclaw-optimizer/systems/`, NOT in the skill directory. Do not commit them to git.
 
 ### What Gets Captured
 
-| Section | Purpose |
-|---|---|
-| **Machines** | Every machine in the deployment: role, SSH access, IPs (local + Tailscale), OS, paths, installed software, notable config |
-| **Network** | Tailnet, Tailscale Serve config, auth mode, token prefixes, connectivity method |
-| **Providers** | Active model providers with slugs and primary use cases |
-| **Model Routing** | Current tiered routing setup |
-| **Channels** | Messaging channels (Telegram, WhatsApp, etc.) and their status |
-| **Paired Devices** | Device entries from the gateway's paired.json — roles, connection status, stale entries |
-| **Cron Jobs** | Full inventory: job ID, name, schedule, status, last run, session target, model override. Flag errors and stale runs. |
-| **Delivery Queue** | Stuck entries in `~/.openclaw/delivery-queue/` — channel, error, count. These cause infinite retry loops. |
-| **Issue Log** | Every problem encountered: symptom → root cause → fix → rollback → lesson |
-| **Lessons Learned** | Accumulated patterns and gotchas specific to this deployment |
+| Topic | File (directory format) | Purpose |
+|---|---|---|
+| **Machines, Network, Paired Devices** | `topology.md` | Every machine: role, SSH, IPs, OS, paths, config. Tailnet, auth, connectivity. Device entries from paired.json. |
+| **Providers** | `providers.md` | Active model providers with slugs, auth details, notes. Removed providers with context. |
+| **Model Routing** | `routing.md` | Tiered routing table, fallback chain, heartbeat config |
+| **Channels, Delivery Queue** | `channels.md` | Messaging channels, Telegram group mapping, stuck delivery entries |
+| **Cron Jobs** | `cron.md` | Full inventory: job ID, name, schedule, model, status, observations |
+| **Issues** | `issues/YYYY-MM.md` | Every problem encountered: symptom → root cause → fix → rollback → lesson |
+| **Lessons Learned** | `lessons.md` | Accumulated patterns and gotchas specific to this deployment (permanent) |
+| **Summary** | `INDEX.md` | Always-loaded overview with key tables and file manifest |
+
+### Issue Lifecycle (directory format)
+
+1. **New issues** go into `issues/YYYY-MM.md` (current month file, newest first)
+2. **After 14 days:** full detail stays in the monthly file, a one-liner is added to `issues/archive.md`
+3. **Monthly files are never deleted** — they're the permanent record
+4. **Lessons** extracted from issues go to `lessons.md` (permanent, never archived)
 
 ### Rules
 
@@ -1097,6 +1121,7 @@ This skill maintains **system profiles** — persistent knowledge files that cap
 - **Rely on built-in backup layers — don't create manual backups for routine changes.** OpenClaw's CLI creates rolling `.bak` files on every config write, and the nightly GitHub backup cron captures the full config in git history. Manual dated backups (`cp <file> <file>.YYYY-MM-DD-<reason>`) are only needed for: (1) major version upgrades, (2) multi-file restructuring (identity audits), (3) direct JSON edits where the CLI isn't used. For routine CLI changes (model swaps, cron edits, config sets), the CLI `.bak` + GitHub nightly are sufficient. Clean up old manual backups after they're covered by the nightly backup.
 
 ---
+
 
 ## 12. Continuous Improvement
 
@@ -1131,7 +1156,9 @@ This skill is a living document. Every troubleshooting session, every CLI intera
    ```bash
    # Sync SKILL.md (skill code — lives in the skill directory)
    scp ~/.claude/skills/openclaw-optimizer/SKILL.md <user>@<host>:~/.openclaw/workspace/skills/openclaw-optimizer/SKILL.md
-   # Sync system profiles (deployment data — lives in the centralized directory)
+   # Sync system profiles — directory format (sync only changed files)
+   scp ~/.openclaw-optimizer/systems/<deployment-id>/<changed-file> <user>@<host>:~/.openclaw-optimizer/systems/<deployment-id>/
+   # Sync system profiles — legacy single-file format
    scp ~/.openclaw-optimizer/systems/<deployment-id>.md <user>@<host>:~/.openclaw-optimizer/systems/
    ```
 
