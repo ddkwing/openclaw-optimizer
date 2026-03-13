@@ -2,7 +2,7 @@
 
 ![OpenClaw Optimizer Banner](assets/banner.png)
 
-**Skill v1.20.0** | Aligned with OpenClaw v2026.3.11 | CLI-first advisor
+**v2026.3.11.1** | Aligned with OpenClaw v2026.3.11 | CLI-first advisor
 
 An AI skill that turns your OpenClaw setup from "it works, I think" into a tuned, cost-efficient, self-documenting system. It audits what you have, tells you exactly what to change, shows you the rollback command before you commit, and remembers everything it learns about your deployment -- permanently, across sessions, across tools.
 

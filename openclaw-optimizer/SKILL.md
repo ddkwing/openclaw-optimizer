@@ -1,7 +1,7 @@
 ---
 name: openclaw-optimizer
 slug: openclaw-optimizer
-version: 2026.3.11
+version: 2026.3.11.1
 description: |
   Use when: you want to optimize an OpenClaw setup (v2026.2.23+) — cost reduction, model routing,
   provider configuration, context management, cron automation, sub-agent architecture, skills,
@@ -46,7 +46,7 @@ metadata:
 
 # OpenClaw Optimizer
 
-**Aligned with: OpenClaw v2026.3.11** | Skill v1.20.0 | Updated: 2026-03-12 | CLI-first advisor
+**Aligned with: OpenClaw v2026.3.11** | v2026.3.11.1 | Updated: 2026-03-12 | CLI-first advisor
 
 Optimize and troubleshoot OpenClaw workspaces: cost-aware routing, provider configuration, context discipline, lean automation, multi-agent architectures, and error resolution.
 
@@ -374,6 +374,8 @@ openclaw models fallbacks add openrouter/anthropic/claude-sonnet-4-5
 ```
 
 **In-chat model switch (no restart):** `/model list` → `/model anthropic/claude-sonnet-4-5`
+
+> **RESTART RULE (confirmed in practice):** Any change to `openclaw.json` — whether via `openclaw config set` or direct JSON edit — requires a gateway restart before taking effect. Never tell the user "no restart needed" after a config change. Always restart: `launchctl kickstart -k gui/$(id -u)/ai.openclaw.gateway`
 
 ### Session Pruning (v2026.3.1+)
 

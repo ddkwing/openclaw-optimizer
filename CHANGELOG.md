@@ -2,6 +2,11 @@
 
 All notable changes to the OpenClaw Optimizer skill are documented here.
 
+## 2026.3.11.1 — 2026-03-12
+
+- **Restart rule:** Any change to `openclaw.json` (via `openclaw config set` or direct JSON edit) requires a gateway restart to take effect — confirmed in practice. Added explicit rule in Section 2 (Per-Agent Config).
+- **Versioning:** Dropped separate `Skill v1.x.x` versioning. Skill version now aligns directly to OpenClaw version. Patch releases between OpenClaw versions use `YYYY.M.D.patch` suffix.
+
 ## 1.20.0 — 2026-03-12
 
 - **Aligned with OpenClaw v2026.3.11** (covers v2026.3.9 through v2026.3.11)
