@@ -1,7 +1,7 @@
 ---
 name: openclaw-optimizer
 slug: openclaw-optimizer
-version: 1.0.0
+version: 26.3.17
 description: "Optimize OpenClaw agent context (bootstrap discipline, compaction, session management) and audit identity files (SOUL.md, IDENTITY.md, AGENTS.md, USER.md, MEMORY.md). Advisory by default — audit first, propose exact changes, apply only on approval."
 triggers:
   - optimize agent
@@ -34,7 +34,7 @@ metadata:
 
 # OpenClaw Optimizer
 
-**Aligned with: OpenClaw v2026.3.11** | v1.0.0 | Updated: 2026-03-17 | CLI-first advisor
+**Aligned with: OpenClaw v2026.3.11** | v26.3.17 | Updated: 2026-03-17 | CLI-first advisor
 
 Optimize OpenClaw agent context usage and identity files: bootstrap file discipline, compaction tuning, session management, and agent personality/identity audit.
 

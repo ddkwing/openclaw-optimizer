@@ -2,7 +2,7 @@
 
 All notable changes to the OpenClaw Optimizer skill are documented here.
 
-## 1.0.0 — 2026-03-17
+## 26.3.17 — 2026-03-17
 
 - **Scope reduction (Occam's razor):** Removed sections and reference files unrelated to context and identity optimization.
 - **Removed:** Section 1 (Model Providers, 40+ provider table), Section 2 (Model Routing), Section 4 (Cron & Automation), Section 5 (Skills & Plugins), Section 6 (Multi-Agent Architecture)

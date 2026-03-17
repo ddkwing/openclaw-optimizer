@@ -2,7 +2,7 @@
 
 > Fork of [jacob-bd/the-openclaw-optimizer](https://github.com/jacob-bd/the-openclaw-optimizer), trimmed to focus on context discipline and agent identity optimization.
 
-**v1.0.0** | Aligned with OpenClaw v2026.3.11 | CLI-first advisor
+**v26.3.17** | Aligned with OpenClaw v2026.3.11 | CLI-first advisor
 
 An AI skill focused on two high-impact areas: **context discipline** (bootstrap file sizes, compaction tuning, session management) and **agent identity** (SOUL.md, IDENTITY.md, AGENTS.md, USER.md audit). Audits what you have, proposes exact changes, shows the rollback command before anything is applied.
 
