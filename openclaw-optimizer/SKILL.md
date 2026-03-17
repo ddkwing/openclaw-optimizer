@@ -1,7 +1,7 @@
 ---
 name: openclaw-optimizer
 slug: openclaw-optimizer
-version: 2026.3.11.2
+version: 1.0.0
 description: |
   Use when: you want to optimize an OpenClaw agent's context usage (bootstrap file discipline,
   compaction tuning, session management) or audit agent identity/personality files
@@ -39,7 +39,7 @@ metadata:
 
 # OpenClaw Optimizer
 
-**Aligned with: OpenClaw v2026.3.11** | v2026.3.11.2 | Updated: 2026-03-17 | CLI-first advisor
+**Aligned with: OpenClaw v2026.3.11** | v1.0.0 | Updated: 2026-03-17 | CLI-first advisor
 
 Optimize OpenClaw agent context usage and identity files: bootstrap file discipline, compaction tuning, session management, and agent personality/identity audit.
 
