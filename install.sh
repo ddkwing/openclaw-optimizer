@@ -1,16 +1,16 @@
 #!/bin/sh
 # OpenClaw Optimizer - One-liner Installer
-# https://github.com/jacob-bd/the-openclaw-optimizer
+# https://github.com/ddkwing/openclaw-optimizer
 #
 # Usage:
-#   curl -fsSL https://raw.githubusercontent.com/jacob-bd/the-openclaw-optimizer/main/install.sh | sh
+#   curl -fsSL https://raw.githubusercontent.com/ddkwing/openclaw-optimizer/main/install.sh | sh
 #   sh install.sh --help
 #   sh install.sh --tools claude,openclaw
 #
 
 set -e
 
-REPO_URL="https://github.com/jacob-bd/the-openclaw-optimizer"
+REPO_URL="https://github.com/ddkwing/openclaw-optimizer"
 TARBALL_URL="${REPO_URL}/archive/refs/heads/main.tar.gz"
 SKILL_FOLDER="openclaw-optimizer"
 
@@ -300,7 +300,7 @@ show_summary() {
     echo "  The systems directory (~/.openclaw-optimizer/systems/) will be"
     echo "  created automatically on first run."
     echo ""
-    echo "  Docs: https://github.com/jacob-bd/the-openclaw-optimizer"
+    echo "  Docs: https://github.com/ddkwing/openclaw-optimizer"
     echo ""
 }
 
