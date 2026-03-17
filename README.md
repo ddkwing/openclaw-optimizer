@@ -1,5 +1,7 @@
 # The OpenClaw Optimizer
 
+> Fork of [jacob-bd/the-openclaw-optimizer](https://github.com/jacob-bd/the-openclaw-optimizer), trimmed to focus on context discipline and agent identity optimization.
+
 ![OpenClaw Optimizer Banner](assets/banner.png)
 
 **v2026.3.11.2** | Aligned with OpenClaw v2026.3.11 | CLI-first advisor
