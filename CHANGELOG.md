@@ -2,6 +2,17 @@
 
 All notable changes to the OpenClaw Optimizer skill are documented here.
 
+## 2026.3.11.2 — 2026-03-17
+
+- **Scope reduction (Occam's razor):** Removed sections and reference files unrelated to context and identity optimization.
+- **Removed:** Section 1 (Model Providers, 40+ provider table), Section 2 (Model Routing), Section 4 (Cron & Automation), Section 5 (Skills & Plugins), Section 6 (Multi-Agent Architecture)
+- **Removed reference files:** `references/providers.md`, `references/troubleshooting.md`, `references/cli-reference.md`, `metadata/`
+- **Trimmed:** Section 7 (levers — removed routing/cron rows), Section 8 (CLI — removed cron/agent-bind commands), Section 9 (Ops — removed cron audit block), Section 10 (Troubleshooting — kept context bloat cascade only)
+- **Skill focus:** Context discipline (bootstrap file sizes, compaction tuning, session management) + Agent identity audit (SOUL.md, IDENTITY.md, AGENTS.md, USER.md)
+- **SKILL.md:** 1,243 → 629 lines (50% reduction)
+- **README.md:** Rewritten to reflect the focused scope
+- **install.sh:** Repo URL updated to this fork
+
 ## 2026.3.11.1 — 2026-03-12
 
 - **Restart rule:** Any change to `openclaw.json` (via `openclaw config set` or direct JSON edit) requires a gateway restart to take effect — confirmed in practice. Added explicit rule in Section 2 (Per-Agent Config).

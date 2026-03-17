@@ -446,7 +446,7 @@ This skill maintains **system profiles** — persistent knowledge files that cap
 
 **Directory:** `~/.openclaw-optimizer/systems/` — one profile per deployment, plus `TEMPLATE.md` for new deployments. This is a **centralized location outside the skill directory** so that: (1) system profiles are never accidentally pushed to git, (2) multiple AI tools (Claude Code, OpenClaw, Gemini CLI, etc.) on the same machine can read/write the same profiles without drift. Cross-machine sync is still manual via SCP.
 
-**Deployment ID:** Each deployment has a unique slug (e.g., `jbd-home`, `prod-cluster-east`, `dev-standalone`).
+**Deployment ID:** Each deployment has a unique slug (e.g., `home-gateway`, `prod-cluster-east`, `dev-standalone`).
 
 **Profile formats (two supported):**
 - **Directory format (preferred):** `~/.openclaw-optimizer/systems/<deployment-id>/` — directory containing `INDEX.md` (always-loaded summary, ~1-4K tokens) plus topic files loaded on-demand. Dramatically reduces session-start context cost.
